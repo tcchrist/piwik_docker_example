@@ -1,0 +1,40 @@
+version: '2'  
+services:  
+  db:
+    image: mysql
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD
+  app:
+    image: piwik
+    links:
+      - db
+    volumes:
+      - ./config:/var/www/html/config
+      - ./ssmtp.conf:/etc/ssmtp/ssmtp.conf
+      - ./revaliases:/etc/ssmtp/revaliases
+    depends_on:
+      - db
+  web:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    links:
+      - app
+    networks:
+      - default
+    ports:
+      - "8080:80"
+    volumes_from:
+      - app
+    environment:
+      - VIRTUAL_HOST
+    depends_on:
+      - app
+  example:
+    build: ./example
+    volumes:
+      - ./example/html:/usr/share/nginx/html:ro
+    ports:
+      - "8081:80"
