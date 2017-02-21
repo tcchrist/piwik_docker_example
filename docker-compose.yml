@@ -7,7 +7,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD
   app:
-    image: piwik
+	build: ./piwik
     links:
       - db
     volumes:
