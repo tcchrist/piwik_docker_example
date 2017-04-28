@@ -10,11 +10,9 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD
       - VIRTUAL_HOST=${MYSQL_HOST}
-    ports:
-      - "3306:3306"
     networks:
       - piwik-net
-      - front-proxy
+
   pwapp:
     image: piwik
     volumes:
@@ -23,6 +21,7 @@ services:
       - db
     networks:
       - piwik-net
+
   web:
     build: nginx 
     volumes:
@@ -38,7 +37,7 @@ services:
       - pwapp
     networks:
       - piwik-net
-      - front-proxy
+
   example:
     build: ./example
     expose:
@@ -47,13 +46,9 @@ services:
       - VIRTUAL_HOST=${CLIENT_HOST}
     networks:
       - piwik-net
-      - front-proxy
 
 networks:
   piwik-net:
-  front-proxy:
-    external:
-      name: nginx-proxy
 
 volumes:
   db-data:

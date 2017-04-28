@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+
+  db:
+    ports:
+      - "3306:3306"
+    networks:
+      - piwik-net
+
+  web:
+    networks:
+      - front-proxy
+
+  example:
+    networks:
+      - front-proxy
+
+networks:
+  front-proxy:
+    external:
+      name: nginx-proxy
